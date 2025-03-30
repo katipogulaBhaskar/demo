@@ -47,6 +47,42 @@ const logInUser = async (req, res) => {
     }
 };
 
+const changePassword = async (req, res) => {
+    const { userId, oldPassword, newPassword, confirmPassword } = req.body;
+  
+    // Validate that newPassword matches confirmPassword
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "New password and confirm password do not match." });
+    }
+  
+    try {
+      // Find the admin by the provided adminId
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+  
+      // Compare the old password with the stored hash
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Old password is incorrect." });
+      }
+  
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      // Update the password and save
+      user.password = hashedPassword;
+      await user.save();
+  
+      res.status(200).json({ message: "Password changed successfully." });
+    } catch (error) {
+      console.error("Error changing password:", error);
+      res.status(500).json({ message: "Server error." });
+    }
+  };
+
 
 // Logout function: Just return a success message, client-side will handle localStorage clearing
 const logoutUser = (req, res) => {
@@ -56,4 +92,4 @@ const logoutUser = (req, res) => {
 
 
 
-export { signUpUser, logInUser, logoutUser};
+export { signUpUser, logInUser, logoutUser, changePassword};

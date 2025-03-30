@@ -1,10 +1,8 @@
 import express from "express";
-import { logInUser, signUpUser, logoutUser } from '../controllers/user.controllers.js';
+import { logInUser, signUpUser, logoutUser, changePassword } from '../controllers/user.controllers.js';
 
 
 import {
-    requestPasswordReset,
-    resetPassword,
     addCourse,
     fetchAllCourses,
     editCourse, deleteCourse
@@ -18,9 +16,8 @@ router.post('/loginUser', logInUser);
 
 router.post('/logout', logoutUser);
 
+router.put('/change-password', changePassword);
 
-router.post("/reset-password-request", requestPasswordReset);
-router.post("/reset-password", resetPassword);
 
 // Course enrollment routes
 router.post('/add-course', addCourse); // Add a course
