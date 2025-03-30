@@ -11,6 +11,18 @@ const UserSchema = new mongoose.Schema({
             type: String, 
             required: true, 
             unique: true 
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        author: {
+            type: String,
+            required: true
+        },
+        duration: {
+            type: Number, // Duration in hours or minutes
+            required: true
         }
     }] // Embedded CourseSchema as an array
 });
